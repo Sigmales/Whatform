@@ -1,19 +1,18 @@
 // src/components/OrdinatoirGogo.js
 import React, { useState, useEffect } from 'react';
-import { Trash2, Eye, EyeOff, RefreshCw, LogOut, Lock, Download, X } from 'lucide-react';
+import { Trash2, Eye, EyeOff, RefreshCw, LogOut, Lock, MessageCircle } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import AdminLogin from './AdminLogin';
-import Ticket from './Ticket';
 
 export default function OrdinatoirGogo({ session }) {
   const [activeTab, setActiveTab] = useState('form');
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [formData, setFormData] = useState({
+    contact: '',
     type: '',
     nom: '',
     lieu: '',
-    contact: '',
     details: '',
     budget: '',
     specs: '',
@@ -36,8 +35,6 @@ export default function OrdinatoirGogo({ session }) {
   const [detailsVisible, setDetailsVisible] = useState({});
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [showTicket, setShowTicket] = useState(false);
-  const [ticketData, setTicketData] = useState(null);
 
   useEffect(() => {
     if (session) {
@@ -64,30 +61,19 @@ export default function OrdinatoirGogo({ session }) {
     setLoading(false);
   };
 
-  const generateTicketId = () => {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const random = Math.floor(Math.random() * 10000).toString().padStart(5, '0');
-    return `TK-${year}${month}${day}-${random}`;
-  };
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
-    if (!formData.type || !formData.nom || !formData.lieu) {
+    if (!formData.contact || !formData.type || !formData.nom || !formData.lieu) {
       alert('Veuillez remplir tous les champs obligatoires');
       return;
     }
 
     setLoading(true);
-    const ticketId = generateTicketId();
 
     const newEntry = {
-      ticket_id: ticketId,
       type: formData.type,
       nom: formData.nom,
       lieu: formData.lieu,
@@ -115,21 +101,14 @@ export default function OrdinatoirGogo({ session }) {
 
       if (error) throw error;
 
-      setMessage('✅ Demande enregistrée !');
-      
-      // Préparer les données du ticket
-      setTicketData({
-        ...newEntry,
-        created_at: new Date().toLocaleString('fr-FR')
-      });
-      setShowTicket(true);
+      setMessage('✅ Demande enregistrée dans Supabase !');
 
       // Réinitialiser le formulaire
       setFormData({
+        contact: '',
         type: '',
         nom: '',
         lieu: '',
-        contact: '',
         details: '',
         budget: '',
         specs: '',
@@ -170,6 +149,13 @@ export default function OrdinatoirGogo({ session }) {
       setMessage('❌ Erreur de suppression');
     }
     setTimeout(() => setMessage(''), 3000);
+  };
+
+  const ouvrirWhatsApp = (numero) => {
+    // Nettoyer le numéro (enlever les espaces, tirets, etc.)
+    const numNettoyé = numero.replace(/\D/g, '');
+    const wa_url = `https://wa.me/${numNettoyé}`;
+    window.open(wa_url, '_blank');
   };
 
   const handleLogout = async () => {
@@ -226,10 +212,6 @@ export default function OrdinatoirGogo({ session }) {
     );
   }
 
-  if (showTicket && ticketData) {
-    return <Ticket ticketData={ticketData} onClose={() => setShowTicket(false)} />;
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 to-pink-600 p-4">
       <div className="max-w-6xl mx-auto">
@@ -264,14 +246,18 @@ export default function OrdinatoirGogo({ session }) {
             <div className="p-8">
               <h1 className="text-3xl font-bold mb-2">💻 Ordinateur à Gogo</h1>
               <p className="text-gray-600 mb-6">💻 Ordinateur à gogo est une plateforme qui met en relation les étudiants rencontrant des problèmes techniques avec leur ordinateur et ceux pouvant proposer une solution, un échange ou une aide.
-🤝 L'objectif est de rendre l'accès à un outil informatique plus simple et rapide pour chaque étudiant, tout en favorisant la solidarité numérique.Remplissez ce formulaire pour nous contacter</p>
+🤝 L'objectif est de rendre l'accès à un outil informatique plus simple et rapide pour chaque étudiant, tout en favorisant la solidarité numérique. Remplissez ce formulaire pour nous contacter</p>
 
               <div className="space-y-6">
+                {/* WhatsApp en PREMIER et OBLIGATOIRE */}
+                <div><label className="block font-semibold mb-2">📱 WhatsApp *</label>
+                  <input type="tel" name="contact" value={formData.contact} onChange={handleChange} placeholder="+226..." required className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-purple-600 focus:outline-none" /></div>
+
                 <div>
                   <label className="block font-semibold mb-2">📋 Type de demande *</label>
                   <select name="type" value={formData.type} onChange={handleChange} required className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-purple-600 focus:outline-none">
                     <option value="">-- Sélectionnez --</option>
-                    <option value="cherche">🔍 Je cherche un compte un etudiant un ordinateur</option>
+                    <option value="cherche">🔍 Je cherche un ordinateur</option>
                     <option value="propose">🎁 Je propose un ordinateur</option>
                     <option value="technique">🔧 J'ai un problème technique</option>
                     <option value="aide">🤝 Je propose mon aide</option>
@@ -340,13 +326,11 @@ export default function OrdinatoirGogo({ session }) {
                   <input type="text" name="nom" value={formData.nom} onChange={handleChange} placeholder="Ex: Jean Dupont" required className="w-full p-3 border-2 border-gray-300 rounded-lg" /></div>
                 <div><label className="block font-semibold mb-2">📍 Localisation *</label>
                   <input type="text" name="lieu" value={formData.lieu} onChange={handleChange} placeholder="Ex: Ouagadougou" required className="w-full p-3 border-2 border-gray-300 rounded-lg" /></div>
-                <div><label className="block font-semibold mb-2">📱 WhatsApp *</label>
-                  <input type="tel" name="contact" value={formData.contact} onChange={handleChange} placeholder="+226..." required className="w-full p-3 border-2 border-gray-300 rounded-lg" /></div>
                 <div><label className="block font-semibold mb-2">💬 Autres infos</label>
                   <textarea name="details" value={formData.details} onChange={handleChange} placeholder="Détails supplémentaires..." className="w-full p-3 border-2 border-gray-300 rounded-lg h-20"></textarea></div>
 
                 <button onClick={handleSubmit} disabled={loading} className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-bold hover:shadow-lg transition disabled:opacity-50">
-                  {loading ? '⏳ Génération du ticket...' : '🎫 Générer mon ticket'}
+                  {loading ? '⏳ Envoi...' : '✅ Enregistrer'}
                 </button>
               </div>
             </div>
@@ -402,10 +386,16 @@ export default function OrdinatoirGogo({ session }) {
                           <span className={`px-3 py-1 rounded-full text-sm font-bold ${typeColors[entry.type]}`}>{typeLabels[entry.type]}</span>
                           <span className="font-bold text-lg">{entry.nom}</span>
                           <span className="text-sm">📍 {entry.lieu}</span>
-                          <span className="text-sm font-mono bg-gray-200 px-2 py-1 rounded">🎫 {entry.ticket_id}</span>
                           <span className="text-sm">📅 {entry.created_at ? new Date(entry.created_at).toLocaleDateString('fr-FR') : 'N/A'}</span>
                         </div>
                         <div className="flex gap-2">
+                          <button 
+                            onClick={() => ouvrirWhatsApp(entry.contact)}
+                            className="p-2 hover:bg-green-500 hover:text-white rounded-lg transition bg-green-100"
+                            title="Contacter via WhatsApp"
+                          >
+                            <MessageCircle size={20} />
+                          </button>
                           <button onClick={() => toggleDetails(entry.id)} className="p-2 hover:bg-white rounded-lg transition">
                             {detailsVisible[entry.id] ? <EyeOff size={20} /> : <Eye size={20} />}
                           </button>
