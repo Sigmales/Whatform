@@ -101,7 +101,7 @@ export default function OrdinatoirGogo({ session }) {
 
       if (error) throw error;
 
-      setMessage('✅ Demande enregistrée dans Supabase !');
+      setMessage('✅ Demande enregistrée !');
 
       // Réinitialiser le formulaire
       setFormData({
