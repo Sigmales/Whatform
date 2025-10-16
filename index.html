@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordinateur à Gogo - Formulaire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 30px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        select, input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: #f8f9ff;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .emoji {
+            margin-right: 5px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💻 Ordinateur à Gogo</h1>
+            <p class="subtitle">Formulaire de demande</p>
+        </header>
+        
+        <div class="info-box">
+            ℹ️ Remplissez ce formulaire pour nous contacter via WhatsApp avec toutes les infos d'un coup.
+        </div>
+        
+        <form id="contactForm">
+            <!-- Type de demande -->
+            <div class="form-group">
+                <label for="type">
+                    <span class="emoji">📋</span>Type de demande
+                </label>
+                <select id="type" required onchange="updateFields()">
+                    <option value="">-- Sélectionnez --</option>
+                    <option value="cherche">🔍 Je cherche un ordinateur</option>
+                    <option value="propose">🎁 Je propose un ordinateur</option>
+                    <option value="technique">🔧 J'ai un problème technique</option>
+                    <option value="aide">🤝 Je propose mon aide</option>
+                </select>
+            </div>
+            
+            <!-- Champs dynamiques -->
+            <div id="dynamicFields"></div>
+            
+            <!-- Champs communs -->
+            <div class="form-group">
+                <label for="nom">
+                    <span class="emoji">👤</span>Nom / Prénom
+                </label>
+                <input type="text" id="nom" placeholder="Ex: Jean Dupont" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="lieu">
+                    <span class="emoji">📍</span>Localisation
+                </label>
+                <input type="text" id="lieu" placeholder="Ex: Ouagadougou" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="contact">
+                    <span class="emoji">📱</span>Numéro WhatsApp
+                </label>
+                <input type="tel" id="contact" placeholder="+226..." required>
+            </div>
+            
+            <div class="form-group">
+                <label for="details">
+                    <span class="emoji">💬</span>Détails / Remarques
+                </label>
+                <textarea id="details" placeholder="Autres informations utiles..."></textarea>
+            </div>
+            
+            <button type="submit">
+                📞 Envoyer via WhatsApp
+            </button>
+        </form>
+    </div>
+    
+    <script>
+        const fields = {
+            cherche: `
+                <div class="form-group">
+                    <label for="budget"><span class="emoji">💰</span>Budget / Gamme</label>
+                    <input type="text" id="budget" placeholder="Ex: 200 000 - 400 000 FCFA">
+                </div>
+                <div class="form-group">
+                    <label for="specs"><span class="emoji">⚙️</span>Spécifications préférées</label>
+                    <input type="text" id="specs" placeholder="Ex: Windows, 8GB RAM, SSD">
+                </div>
+                <div class="form-group">
+                    <label for="urgence"><span class="emoji">⏱️</span>Urgence</label>
+                    <select id="urgence">
+                        <option>Normal</option>
+                        <option>Très urgent</option>
+                        <option>Pas pressé</option>
+                    </select>
+                </div>
+            `,
+            propose: `
+                <div class="form-group">
+                    <label for="marque"><span class="emoji">🏷️</span>Marque / Modèle</label>
+                    <input type="text" id="marque" placeholder="Ex: HP Pavilion 15">
+                </div>
+                <div class="form-group">
+                    <label for="specs2"><span class="emoji">⚙️</span>Caractéristiques</label>
+                    <input type="text" id="specs2" placeholder="Ex: i5, 8GB, 256GB SSD">
+                </div>
+                <div class="form-group">
+                    <label for="etat"><span class="emoji">🔧</span>État</label>
+                    <select id="etat">
+                        <option>Excellent</option>
+                        <option>Bon</option>
+                        <option>Acceptable</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="proposition"><span class="emoji">💵</span>Type de proposition</label>
+                    <select id="proposition">
+                        <option>Don</option>
+                        <option>Échange</option>
+                        <option>Vente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="prix"><span class="emoji">💰</span>Prix (si applicable)</label>
+                    <input type="text" id="prix" placeholder="Ex: 250 000 FCFA">
+                </div>
+            `,
+            technique: `
+                <div class="form-group">
+                    <label for="ordi"><span class="emoji">💻</span>Ordinateur (Marque/OS)</label>
+                    <input type="text" id="ordi" placeholder="Ex: Dell Windows 10">
+                </div>
+                <div class="form-group">
+                    <label for="probleme"><span class="emoji">🚨</span>Décrivez le problème</label>
+                    <textarea id="probleme" placeholder="Détaillez le problème..." style="min-height: 100px;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="depuis"><span class="emoji">⏰</span>Depuis quand</label>
+                    <input type="text" id="depuis" placeholder="Ex: 2 jours">
+                </div>
+            `,
+            aide: `
+                <div class="form-group">
+                    <label for="expertise"><span class="emoji">💡</span>Domaines d'expertise</label>
+                    <input type="text" id="expertise" placeholder="Ex: Dépannage, Logiciels, Matériel">
+                </div>
+                <div class="form-group">
+                    <label for="dispo"><span class="emoji">📅</span>Disponibilité</label>
+                    <input type="text" id="dispo" placeholder="Ex: Soirs et week-end">
+                </div>
+            `
+        };
+        
+        function updateFields() {
+            const type = document.getElementById('type').value;
+            document.getElementById('dynamicFields').innerHTML = fields[type] || '';
+        }
+        
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const type = document.getElementById('type').value;
+            const nom = document.getElementById('nom').value;
+            const lieu = document.getElementById('lieu').value;
+            const contact = document.getElementById('contact').value;
+            const details = document.getElementById('details').value;
+            
+            let message = `Bonjour 👋\n\n`;
+            
+            const typeLabels = {
+                cherche: '🔍 Je cherche un ordinateur',
+                propose: '🎁 Je propose un ordinateur',
+                technique: '🔧 J\'ai un problème technique',
+                aide: '🤝 Je propose mon aide'
+            };
+            
+            message += `**${typeLabels[type]}**\n\n`;
+            message += `👤 Nom: ${nom}\n`;
+            message += `📍 Lieu: ${lieu}\n`;
+            message += `📱 Contact: ${contact}\n\n`;
+            
+            // Ajouter les champs dynamiques
+            if (type === 'cherche') {
+                const budget = document.getElementById('budget').value;
+                const specs = document.getElementById('specs').value;
+                const urgence = document.getElementById('urgence').value;
+                message += `💰 Budget: ${budget}\n`;
+                message += `⚙️ Spécifications: ${specs}\n`;
+                message += `⏱️ Urgence: ${urgence}\n\n`;
+            } else if (type === 'propose') {
+                const marque = document.getElementById('marque').value;
+                const specs2 = document.getElementById('specs2').value;
+                const etat = document.getElementById('etat').value;
+                const proposition = document.getElementById('proposition').value;
+                const prix = document.getElementById('prix').value;
+                message += `🏷️ Marque: ${marque}\n`;
+                message += `⚙️ Caractéristiques: ${specs2}\n`;
+                message += `🔧 État: ${etat}\n`;
+                message += `💵 Type: ${proposition}\n`;
+                if (prix) message += `💰 Prix: ${prix}\n`;
+                message += '\n';
+            } else if (type === 'technique') {
+                const ordi = document.getElementById('ordi').value;
+                const probleme = document.getElementById('probleme').value;
+                const depuis = document.getElementById('depuis').value;
+                message += `💻 Ordinateur: ${ordi}\n`;
+                message += `🚨 Problème: ${probleme}\n`;
+                message += `⏰ Depuis: ${depuis}\n\n`;
+            } else if (type === 'aide') {
+                const expertise = document.getElementById('expertise').value;
+                const dispo = document.getElementById('dispo').value;
+                message += `💡 Expertise: ${expertise}\n`;
+                message += `📅 Disponibilité: ${dispo}\n\n`;
+            }
+            
+            message += `💬 Autres infos: ${details || 'Aucune'}`;
+            
+            // Encoder le message
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/22653591517?text=${encodedMessage}`;
+            
+            window.open(whatsappUrl, '_blank');
+        });
+    </script>
+</body>
+</html>
