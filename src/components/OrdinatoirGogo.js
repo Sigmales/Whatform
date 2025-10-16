@@ -263,7 +263,8 @@ export default function OrdinatoirGogo({ session }) {
           {activeTab === 'form' && (
             <div className="p-8">
               <h1 className="text-3xl font-bold mb-2">💻 Ordinateur à Gogo</h1>
-              <p className="text-gray-600 mb-6">Remplissez ce formulaire pour nous contacter</p>
+              <p className="text-gray-600 mb-6">💻 Ordinateur à gogo est une plateforme qui met en relation les étudiants rencontrant des problèmes techniques avec leur ordinateur et ceux pouvant proposer une solution, un échange ou une aide.
+🤝 L’objectif est de rendre l’accès à un outil informatique plus simple et rapide pour chaque étudiant, tout en favorisant la solidarité numérique. </br>Remplissez ce formulaire pour nous contacter</p>
 
               <div className="space-y-6">
                 <div>
