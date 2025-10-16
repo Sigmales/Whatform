@@ -270,7 +270,7 @@ export default function OrdinatoirGogo({ session }) {
                   <label className="block font-semibold mb-2">📋 Type de demande *</label>
                   <select name="type" value={formData.type} onChange={handleChange} required className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-purple-600 focus:outline-none">
                     <option value="">-- Sélectionnez --</option>
-                    <option value="cherche">🔍 Je cherche un ordinateur</option>
+                    <option value="cherche">🔍 Je cherche un compte un etudiant un ordinateur</option>
                     <option value="propose">🎁 Je propose un ordinateur</option>
                     <option value="technique">🔧 J'ai un problème technique</option>
                     <option value="aide">🤝 Je propose mon aide</option>
