@@ -331,6 +331,7 @@ export default function OrdinatoirGogo({ session }) {
 
                 <button onClick={handleSubmit} disabled={loading} className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-bold hover:shadow-lg transition disabled:opacity-50">
                   {loading ? '⏳ Envoi...' : '✅ Enregistrer'}
+                    <p className="text-gray-600 mb-6">Je consens à recevoir des messages de Ordinateur à Gogo concernant l’entraide et les services techniques. Je peux me désinscrire à tout moment. Numéro utilisé uniquement pour la coordination et l’assistance</p>
                 </button>
               </div>
             </div>
